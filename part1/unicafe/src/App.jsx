@@ -21,14 +21,14 @@ const Statistics = ({ text, values }) => {
     <div>
       <Header text={text} />
       {values[3] === 0 ? <p>No feedback given</p> :
-        <>
+        <table>
           <StatisticLine text="good" value={values[0]} />
           <StatisticLine text="neutral" value={values[1]} />
           <StatisticLine text="bad" value={values[2]} />
           <StatisticLine text="all" value={values[3]} />
           <StatisticLine text="average" value={isNaN(average) ? 0 : average} />
           <StatisticLine text="positive" value={(isNaN(positive) ? 0 : positive) + ' %'} />
-        </>
+        </table>
       }
     </div>
   )
@@ -37,7 +37,10 @@ const Statistics = ({ text, values }) => {
 
 const StatisticLine = ({ text, value }) => {
   return (
-    <p>{text} {value}</p>
+    <tr>
+      <td>{text} </td>
+      <td>{value}</td>
+    </tr>
   )
 }
 
