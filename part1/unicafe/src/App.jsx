@@ -14,7 +14,24 @@ const Header = ({text}) => {
   )
 }
 
-const Statistic = ({text, value}) => {
+const Statistics = ({text, values}) => {
+  const average = values[4] / values[3]
+  const positive = values[5] / values[3] * 100
+  return (
+    <div>
+      <Header text={text}/>
+      <StatisticLine text="good" value={values[0]} />
+      <StatisticLine text="neutral" value={values[1]} />
+      <StatisticLine text="bad" value={values[2]} />
+      <StatisticLine text="all" value={values[3]} />
+      <StatisticLine text="average" value={isNaN(average) ? 0 : average} />
+      <StatisticLine text="positive" value={(isNaN(positive) ? 0  : positive) + ' %'} />
+    </div>
+  )
+}
+
+
+const StatisticLine = ({text, value}) => {
   return (
     <p>{text} {value}</p>
   )
@@ -25,17 +42,38 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [allClicks, setAllClicks] = useState(0)
+  const [average, setAverage] = useState(0)
+  const [positive, setPositive] = useState(0)
+
+  const handleGoodClick = () => {
+    setGood(good + 1)
+    setAllClicks(allClicks + 1)
+    setAverage(average + 1)
+    setPositive(positive + 1)
+  }
+
+  const handleNeutralClick = () => {
+    setNeutral(neutral + 1)
+    setAllClicks(allClicks + 1)
+    setAverage(average + 0)
+    setPositive(positive + 0)
+  }
+
+  const handleBadClick = () => {
+    setBad(bad + 1)
+    setAllClicks(allClicks + 1)
+    setAverage(average - 1)
+    setPositive(positive + 0)
+  }
 
   return (
     <div>
       <Header text="give feedback"/>
-      <Button handleClick={() => setGood(good + 1)} text='good' />
-      <Button handleClick={() => setNeutral(neutral + 1)} text='neutral' />
-      <Button handleClick={() => setBad(bad + 1)} text='bad' />
-      <Header text="statistics"/>
-      <Statistic text="good" value={good} />
-      <Statistic text="neutral" value={neutral} />
-      <Statistic text="bad" value={bad} />
+      <Button handleClick={handleGoodClick} text='good' />
+      <Button handleClick={handleNeutralClick} text='neutral' />
+      <Button handleClick={handleBadClick} text='bad' />
+      <Statistics text="statistics" values={[good, neutral, bad, allClicks, average, positive ]} />
     </div>
   )
 }
