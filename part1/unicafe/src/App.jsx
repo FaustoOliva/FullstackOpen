@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Button = ({handleClick, text}) => {
+const Button = ({ handleClick, text }) => {
   return (
     <button style={{ margin: '8px' }} onClick={handleClick}>
       {text}
@@ -8,30 +8,34 @@ const Button = ({handleClick, text}) => {
   )
 }
 
-const Header = ({text}) => {
+const Header = ({ text }) => {
   return (
     <h1>{text}</h1>
   )
 }
 
-const Statistics = ({text, values}) => {
+const Statistics = ({ text, values }) => {
   const average = values[4] / values[3]
   const positive = values[5] / values[3] * 100
   return (
     <div>
-      <Header text={text}/>
-      <StatisticLine text="good" value={values[0]} />
-      <StatisticLine text="neutral" value={values[1]} />
-      <StatisticLine text="bad" value={values[2]} />
-      <StatisticLine text="all" value={values[3]} />
-      <StatisticLine text="average" value={isNaN(average) ? 0 : average} />
-      <StatisticLine text="positive" value={(isNaN(positive) ? 0  : positive) + ' %'} />
+      <Header text={text} />
+      {values[3] === 0 ? <p>No feedback given</p> :
+        <>
+          <StatisticLine text="good" value={values[0]} />
+          <StatisticLine text="neutral" value={values[1]} />
+          <StatisticLine text="bad" value={values[2]} />
+          <StatisticLine text="all" value={values[3]} />
+          <StatisticLine text="average" value={isNaN(average) ? 0 : average} />
+          <StatisticLine text="positive" value={(isNaN(positive) ? 0 : positive) + ' %'} />
+        </>
+      }
     </div>
   )
 }
 
 
-const StatisticLine = ({text, value}) => {
+const StatisticLine = ({ text, value }) => {
   return (
     <p>{text} {value}</p>
   )
@@ -69,11 +73,11 @@ const App = () => {
 
   return (
     <div>
-      <Header text="give feedback"/>
+      <Header text="give feedback" />
       <Button handleClick={handleGoodClick} text='good' />
       <Button handleClick={handleNeutralClick} text='neutral' />
       <Button handleClick={handleBadClick} text='bad' />
-      <Statistics text="statistics" values={[good, neutral, bad, allClicks, average, positive ]} />
+      <Statistics text="statistics" values={[good, neutral, bad, allClicks, average, positive]} />
     </div>
   )
 }
