@@ -4,7 +4,7 @@ import Content from './Content'
 const Course = ({ course }) => {
     return (
       <>
-        <Header course={course.name} />
+        <h2> {course.name} </h2>
         <Content parts={course.parts}/>
       </>
     )
