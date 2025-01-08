@@ -1,14 +1,19 @@
-function Persons({ personsToShow }) {
+function Persons({ personsToShow, handleDeletePersonChange }) {
+
     return (
         <div>
-            {personsToShow.map(person => <Person key={person.name} person={person} />)}
+            {personsToShow.map(person => <Person key={person.name} person={person} handleDeletePersonChange={handleDeletePersonChange} />)}
         </div>
     )
 }
 
-function Person({ person }) {
+function Person({ person, handleDeletePersonChange }) {
     return (
-        <p>{person.name} {person.number}</p>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <p style={{ marginRight: '10px' }}>{person.name} {person.number}</p>
+            <button onClick={() => handleDeletePersonChange(person.id)}>
+                delete</button>
+        </div >
     )
 }
 
