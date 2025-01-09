@@ -1,0 +1,19 @@
+.notificationSuccess {
+    color: rgb(94, 190, 34);
+    background: rgb(196, 194, 194);
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.notificationError {
+    color: rgb(186, 33, 33);
+    background: rgb(196, 194, 194);
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}

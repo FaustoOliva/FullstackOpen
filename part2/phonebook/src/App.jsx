@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import axios from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,6 +13,10 @@ const App = () => {
   })
   const [showAll, setShowAll] = useState(true)
   const [search, setSearch] = useState('')
+  const [notification, setNotification] = useState({
+    message: null,
+    className: ''
+  })
 
   useEffect(() => {
     axios
@@ -43,19 +48,38 @@ const App = () => {
     const { name, number } = newPerson
     if (persons.find(person => person.name === name && person.number !== number)) {
       if (window.confirm(`${name} is aleady added to phonebook, replace the old number with a new one?`)) {
-        const person = persons.find(person => person.name === name)
-        const changedPerson = { ...person, number: number }
+        const personToChange = persons.find(person => person.name === name)
+        const personToChangeNew = { ...personToChange, number: number }
         axios
-          .update(person.id, changedPerson)
+          .update(personToChange.id, personToChangeNew)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
           })
+          .catch(e => {
+            setNotification({
+              message: `information of ${name} has already been removed from server`,
+              className: 'notificationError'
+            })
+
+            setTimeout(() => {
+              setNotification({...notification, message: null})
+            }, 4000);
+            setPersons(persons.filter(person => person.id !== personToChange.id))
+
+          })
+        setNotification({
+          message: `Updated ${name}`,
+          className: 'notificationSuccess'
+        })
+        setTimeout(() => {
+          setNotification({...notification, message:null})
+        }, 4000);
       }
       clearForm()
       return
     } else if (persons.find(person => person.name === name && person.number === number)) {
       alert(`${name} is already added to phonebook`)
-      clearForm() 
+      clearForm()
       return
     }
     const personObject = {
@@ -67,7 +91,26 @@ const App = () => {
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setNotification({
+          message: `Added ${name}`,
+          className: 'notificationSuccess'
+        })
+        setTimeout(() => {
+          setNotification({...notification, message: null})
+        }, 4000);
         clearForm()
+      })
+      .catch(e => {
+        setNotification(
+          {
+            message: `information of ${name} has already been removed from server`,
+            className: 'notificationError'
+          }
+        )
+        setTimeout(() => {
+          setNotification({...notification, message: null})
+        }, 4000);
+        setPersons(persons.filter(person => person.id !== personToChange.id))
       })
   }
 
@@ -88,7 +131,13 @@ const App = () => {
           setPersons(persons.filter(person => person.id !== id))
         })
         .catch(e => {
-          alert(`the person '${person.name}' was already deleted from server`)
+          setNotification({
+            message: `information of ${person.name} has already been removed from server`,
+            className: 'notificationError'
+          })
+          setTimeout(() => {
+            setNotification({...notification, message: null})
+          }, 4000);
           setPersons(persons.filter(person => person.id !== id))
         })
     }
@@ -98,6 +147,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} />
       <Filter search={search} handleSearchChange={handleSearchChange} />
       <h2>Add new number</h2>
       <PersonForm addPerson={addPerson} newPerson={newPerson} handlePersonChange={handlePersonChange} />
